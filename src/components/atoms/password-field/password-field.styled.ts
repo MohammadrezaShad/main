@@ -1,0 +1,62 @@
+import {styled} from '@styled/jsx';
+
+export const Container = styled('span', {
+  base: {
+    display: 'block',
+    position: 'relative',
+    zIndex: 1,
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.5,
+        cursor: 'default',
+        pointerEvents: 'none',
+      },
+    },
+  },
+});
+
+export const Label = styled('label', {
+  base: {
+    display: 'block',
+    textStyle: 'body',
+    color: 'text.primary',
+    mb: 1,
+  },
+});
+
+export const Input = styled('input', {
+  base: {
+    h: '100%',
+    w: '100%',
+    textStyle: 'body2',
+    color: 'text.secondary',
+    rounded: 'lg',
+    bg: 'backgroundSecondary',
+    minH: '40px',
+    px: 3,
+    textAlign: 'right',
+
+    _placeholder: {
+      color: 'text.variant',
+    },
+    _focus: {
+      outline: 'none',
+    },
+  },
+});
+
+export const Icon = styled('span', {
+  base: {
+    pos: 'absolute',
+    left: 3,
+    bottom: '8px',
+    zIndex: 1,
+    '& PATH': {
+      fill: 'text.secondary',
+    },
+  },
+});
