@@ -17,9 +17,9 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: 'فروشگاه اینترنتی اگیبی',
+  title: 'BBB: The Sign of a Better Business | Better Business Bureau®',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.svg',
   },
 };
 

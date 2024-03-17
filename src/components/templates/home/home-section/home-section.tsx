@@ -2,7 +2,7 @@ import {css} from '@styled/css';
 
 export default function HomeSection() {
   return (
-    <div className='stack css-1xpfu7h esji3j80'>
+    <div className={css({px: 6})}>
       <section className={css({maxW: '8xl', m: 'auto', w: '100%', py: 10})}>
         <div
           className={css({

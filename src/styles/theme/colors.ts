@@ -4,7 +4,7 @@ const LIGHT_COLORS = {
   primary: '#005f86',
   secondary: '#475072',
   surface: '#F5F5F5',
-  success: '#4BC97C',
+  success: '#008755',
   danger: '#C92936',
   info: '#51A4E8',
   warning: '#F47833',
