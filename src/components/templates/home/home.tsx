@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
@@ -6,12 +10,17 @@
 
 'use client';
 
+import React from 'react';
+import {useClickAway} from 'react-use';
 import {css} from '@styled/css';
 import {QueryClient} from '@tanstack/react-query';
 import Link from 'next/link';
 
 import {Button} from '@/components';
+import {jobs} from '@/constants/jobs';
+import {locations} from '@/constants/location';
 import {Paths} from '@/utils';
+import {findMatching} from '@/utils/find-matching';
 
 import HomeSection from './home-section';
 
@@ -20,6 +29,40 @@ const queryClient = new QueryClient();
 // Version A: Modify it by changing the query
 
 export default function Home() {
+  const [selectedJob, setSelectedJob] = React.useState<string | null>(null);
+  const [showJobsList, setShowJobsList] = React.useState(false);
+  const jobWrapRef = React.useRef(null);
+  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(null);
+  const [showLocationsList, setShowLocationsList] = React.useState(false);
+  const locationWrapRef = React.useRef(null);
+
+  const matchedJobs = findMatching(selectedJob || '', jobs, {
+    caseSensitive: false,
+    matchSubstring: true,
+  }).slice(0, 6);
+
+  const matchedLocations = findMatching(selectedLocation || '', locations, {
+    caseSensitive: false,
+    matchSubstring: true,
+  }).slice(0, 6);
+
+  const onFindChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target;
+    setSelectedJob(value);
+  };
+
+  const onNearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target;
+    setSelectedLocation(value);
+  };
+
+  useClickAway(locationWrapRef, () => {
+    setShowLocationsList(false);
+  });
+
+  useClickAway(jobWrapRef, () => {
+    setShowJobsList(false);
+  });
   return (
     <div className={css({w: '100%'})}>
       <div className={css({bg: 'red', w: '100%'})}>
@@ -64,7 +107,7 @@ export default function Home() {
                 </div>
               </div>
               <div className={css({bg: '#007398', w: '80%', p: 6, mt: 10, boxShadow: 'lg'})}>
-                <form action='https://www.bbb.org/search' name='search-form'>
+                <form name='search-form'>
                   <label
                     htmlFor=':R6lal4pa:'
                     aria-hidden='true'
@@ -139,7 +182,10 @@ export default function Home() {
                           flex: '1 1 auto',
                           ml: '12px',
                           width: '100%',
+                          pos: 'relative',
                         })}
+                        ref={jobWrapRef}
+                        onClick={() => setShowJobsList(true)}
                       >
                         <input
                           aria-autocomplete='list'
@@ -153,16 +199,49 @@ export default function Home() {
                           aria-expanded='false'
                           aria-owns=':Rjalal4paH2:'
                           className={css({border: '0', outline: 'none', w: '100%'})}
-                          defaultValue=''
+                          value={selectedJob || ''}
+                          onChange={onFindChange}
                         />
-                        {/* <div
-                          role='listbox'
-                          aria-labelledby=':Rjalal4paH1:'
-                          id=':Rjalal4paH2:'
-                          className='css-14232aq ekqkvz0'
-                        >
-                          <ul className='css-1uunpja ekqkvz3' />
-                        </div> */}
+                        {showJobsList && selectedJob !== matchedJobs?.at(0) ? (
+                          <div
+                            className={css({
+                              top: '40px',
+                              pos: 'absolute',
+                              alignItems: 'stretch',
+                              display: 'flex',
+                              flex: '1 1 auto',
+                              bg: 'white',
+                              left: '-55px',
+                              right: '0',
+                              boxShadow: 'lg',
+                            })}
+                          >
+                            <ul className={css({w: '100%'})}>
+                              {matchedJobs.map((job, index) => (
+                                <li
+                                  key={index}
+                                  onClick={() => {
+                                    setSelectedJob(job);
+                                  }}
+                                  className={css({
+                                    p: 3,
+                                    borderBottom:
+                                      matchedJobs.length === index + 1
+                                        ? undefined
+                                        : '1px solid token(colors.strokeSecondary)',
+                                    cursor: 'pointer',
+                                    _hover: {
+                                      bg: '#007398',
+                                      color: 'text.invert',
+                                    },
+                                  })}
+                                >
+                                  {job}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                     <div
@@ -203,6 +282,8 @@ export default function Home() {
                           ml: '12px',
                           width: '100%',
                         })}
+                        ref={locationWrapRef}
+                        onClick={() => setShowLocationsList(true)}
                       >
                         <input
                           aria-autocomplete='list'
@@ -215,16 +296,49 @@ export default function Home() {
                           aria-expanded='false'
                           aria-owns=':Rlalal4paH2:'
                           className={css({border: '0', outline: 'none', w: '100%'})}
-                          defaultValue=''
+                          value={selectedLocation || ''}
+                          onChange={onNearChange}
                         />
-                        <div
-                          role='listbox'
-                          aria-labelledby=':Rlalal4paH1:'
-                          id=':Rlalal4paH2:'
-                          className='css-14232aq ekqkvz0'
-                        >
-                          <ul className='css-1uunpja ekqkvz3' />
-                        </div>
+                        {showLocationsList && selectedLocation !== matchedLocations?.at(0) ? (
+                          <div
+                            className={css({
+                              top: '40px',
+                              pos: 'absolute',
+                              alignItems: 'stretch',
+                              display: 'flex',
+                              flex: '1 1 auto',
+                              bg: 'white',
+                              left: '0',
+                              right: '0',
+                              boxShadow: 'lg',
+                            })}
+                          >
+                            <ul className={css({w: '100%'})}>
+                              {matchedLocations.map((loc, index) => (
+                                <li
+                                  key={index}
+                                  onClick={() => {
+                                    setSelectedLocation(loc);
+                                  }}
+                                  className={css({
+                                    p: 3,
+                                    borderBottom:
+                                      matchedLocations.length === index + 1
+                                        ? undefined
+                                        : '1px solid token(colors.strokeSecondary)',
+                                    cursor: 'pointer',
+                                    _hover: {
+                                      bg: '#007398',
+                                      color: 'text.invert',
+                                    },
+                                  })}
+                                >
+                                  {loc}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : null}
                       </div>
                       <div className={css({w: '60px'})}>
                         <div
@@ -297,13 +411,9 @@ export default function Home() {
                         </ul> */}
                       </div>
                     </div>
-                    <button
-                      className='bds-button dtm-header-search-submit css-wbkz77 erb0q3a0'
-                      data-type='search'
-                      type='submit'
-                    >
+                    <Button color='success' className={css({rounded: '0'})}>
                       Search
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
